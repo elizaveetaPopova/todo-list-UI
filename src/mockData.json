@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Создание базы данных",
+    "description": "Создать базу и коллекции документов",
+    "status": false
+  },
+  {
+    "title": "Создание методов",
+    "description": "Воспроизвести удаление, изменение, добавление объектов",
+    "status": false
+  },
+  {
+    "title": "Подключить БД",
+    "description": "Произвести подключение базы данных, настроить её",
+    "status": true
+  },
+  {
+    "title": "Создать сортировка",
+    "description": "Произвести сортировку по выбранным категориям",
+    "status": true
+  },
+  {
+    "title": "Создать форму отправки",
+    "description": "Создать модальное окно с возможностью отправки данных",
+    "status": true
+  },
+  {
+    "title": "task 1",
+    "description": "description1",
+    "status": false
+  },
+  {
+    "title": "task 2",
+    "description": "description2",
+    "status": false
+  },
+  {
+    "title": "task 3",
+    "description": "description3",
+    "status": false
+  },
+  {
+    "title": "task 4",
+    "description": "description4",
+    "status": false
+  },
+  {
+    "title": "task 5",
+    "description": "description5",
+    "status": false
+  },
+  {
+    "title": "task 6",
+    "description": "description6",
+    "status": false
+  },
+  {
+    "title": "task 7",
+    "description": "description7",
+    "status": false
+  },
+  {
+    "title": "task 8",
+    "description": "description8",
+    "status": false
+  },
+  {
+    "title": "task 9",
+    "description": "description9",
+    "status": false
+  },
+  {
+    "title": "task 10",
+    "description": "description10",
+    "status": false
+  }
+]

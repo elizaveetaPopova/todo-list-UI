@@ -14,7 +14,6 @@ const App = () => {
   const handleOpen = () => setPopupOpen(true);
   const handleClose = () => setPopupOpen(false);
 
-  console.log("isPopupOpen :>> ", isPopupOpen);
   return (
     <div className="app">
       <Card className="tasksCard">

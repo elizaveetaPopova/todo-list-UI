@@ -2,76 +2,91 @@
   {
     "title": "Создание базы данных",
     "description": "Создать базу и коллекции документов",
-    "status": false
+    "status": false,
+    "id": 0
   },
   {
     "title": "Создание методов",
     "description": "Воспроизвести удаление, изменение, добавление объектов",
-    "status": false
+    "status": false,
+    "id": 1
   },
   {
     "title": "Подключить БД",
     "description": "Произвести подключение базы данных, настроить её",
-    "status": true
+    "status": true,
+    "id": 2
   },
   {
     "title": "Создать сортировка",
     "description": "Произвести сортировку по выбранным категориям",
-    "status": true
+    "status": true,
+    "id": 3
   },
   {
     "title": "Создать форму отправки",
     "description": "Создать модальное окно с возможностью отправки данных",
-    "status": true
+    "status": true,
+    "id": 4
   },
   {
     "title": "task 1",
     "description": "description1",
-    "status": false
+    "status": false,
+    "id": 5
   },
   {
     "title": "task 2",
     "description": "description2",
-    "status": false
+    "status": false,
+    "id": 6
   },
   {
     "title": "task 3",
     "description": "description3",
-    "status": false
+    "status": false,
+    "id": 7
   },
   {
     "title": "task 4",
     "description": "description4",
-    "status": false
+    "status": false,
+    "id": 8
   },
   {
     "title": "task 5",
     "description": "description5",
-    "status": false
+    "status": false,
+    "id": 9
   },
   {
     "title": "task 6",
     "description": "description6",
-    "status": false
+    "status": false,
+    "id": 10
   },
   {
     "title": "task 7",
     "description": "description7",
-    "status": false
+    "status": false,
+    "id": 11
   },
   {
     "title": "task 8",
     "description": "description8",
-    "status": false
+    "status": false,
+    "id": 12
   },
   {
     "title": "task 9",
     "description": "description9",
-    "status": false
+    "status": false,
+    "id": 13
   },
   {
     "title": "task 10",
     "description": "description10",
-    "status": false
+    "status": false,
+    "id": 14
   }
 ]

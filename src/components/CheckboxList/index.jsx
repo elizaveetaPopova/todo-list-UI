@@ -19,7 +19,6 @@ const CheckboxList = () => {
     dispatch(fetchTasks());
   }, [dispatch]);
   const { status, error, tasks } = useSelector((state) => state.tasks);
-  // console.log("tasks :>> ", tasks);
   const onChangeCheckbox = (taskId) => {
     dispatch(toggleTask({ taskId }));
   };

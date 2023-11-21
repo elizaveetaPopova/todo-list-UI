@@ -35,6 +35,28 @@ export const removeTask = createAsyncThunk(
   }
 );
 
+export const addNewTask = createAsyncThunk(
+  "tasks/addTask",
+  async (task, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(task),
+      });
+      if (!response.ok) {
+        throw new Error("Невозможно добавить задачу");
+      }
+      const data = await response.json();
+      dispatch(addTask(data));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const setError = (state, action) => {
   state.status = "rejected";
   state.error = action.payload;
@@ -51,13 +73,7 @@ const taskSlice = createSlice({
     getOneTask(state, action) {},
 
     addTask(state, action) {
-      const task = {
-        title: action.payload.title,
-        description: action.payload.description,
-        status: false,
-      };
-      // state.tasks.push(task);
-      // tasksApi.endpoints.(task);
+      state.tasks.push(action.payload);
     },
     deleteTask(state, action) {
       state.tasks = state.tasks.filter(
@@ -83,6 +99,7 @@ const taskSlice = createSlice({
     });
     builder.addCase(fetchTasks.rejected, setError);
     builder.addCase(removeTask.rejected, setError);
+    builder.addCase(addNewTask.rejected, setError);
   },
 });
 

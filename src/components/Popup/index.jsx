@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { addNewTask } from "../../services/store/taskSlice";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -9,10 +10,20 @@ import "./popup.css";
 const Popup = ({ isPopupOpen, onClose }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const addTodoTask = () => {};
+  const dispatch = useDispatch();
+  const handleSubmit = () => {
+    if (!!title && !!description) {
+      const taskBody = {
+        title,
+        description,
+      };
+      dispatch(addNewTask(taskBody));
+    }
+  };
+
   return (
     <Modal className="modal" open={isPopupOpen}>
-      <Box className="box" component="form">
+      <Box className="box" component="form" onSubmit={handleSubmit}>
         <div className="fieldGroup">
           <TextField
             fullWidth
@@ -31,12 +42,14 @@ const Popup = ({ isPopupOpen, onClose }) => {
             id="outlined-multiline-flexible"
             label="Описание задачи"
             value={description}
-            onChange={(event) => setDescription(event.target.value)}
+            onChange={(event) => {
+              setDescription(event.target.value);
+            }}
           />
         </div>
 
         <div className="buttonGroup">
-          <Button variant="contained" color="success" onClick={addTodoTask}>
+          <Button variant="contained" color="success" type="submit">
             Добавить задачу
           </Button>
           <Button

@@ -1,0 +1,9 @@
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.checkboxContainer {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -6,7 +7,6 @@ import Popup from "./components/Popup";
 import CheckboxList from "./components/CheckboxList";
 
 import "./styles/app.css";
-import { useState } from "react";
 
 const App = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -26,7 +26,7 @@ const App = () => {
           Добавить новую задачу
         </Button>
         <CheckboxList />
-        <Button variant="contained" color="error" >
+        <Button variant="contained" color="error">
           Удалить выполненные задачи
         </Button>
       </Card>

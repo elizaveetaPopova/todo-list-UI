@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPopupStatus } from "./services/store/appSlice";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -9,9 +10,14 @@ import CheckboxList from "./components/CheckboxList";
 import "./styles/app.css";
 
 const App = () => {
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const handleOpen = () => setPopupOpen(true);
-  const handleClose = () => setPopupOpen(false);
+  const dispatch = useDispatch();
+  const isPopupOpen = useSelector((state) => state.app.isPopupOpen);
+  const handleOpen = () => {
+    dispatch(setPopupStatus(true));
+  };
+  const handleClose = () => {
+    dispatch(setPopupStatus(false));
+  };
 
   return (
     <div className="app">

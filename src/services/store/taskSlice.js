@@ -73,47 +73,16 @@ export const addNewTask = createAsyncThunk(
   }
 );
 
-export const selectTask = createAsyncThunk(
-  "tasks/toggleTask",
-  async (id, { rejectWithValue, dispatch, getState }) => {
-    const state = getState();
-    const { tasks } = state.tasks;
-    const taskStatus = tasks.find((task) => task._id === id);
-    console.log("taskStatus.status :>> ", taskStatus.status);
-    try {
-      const response = await fetch(`${API_URL}/tasks/toggle/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({ status: !taskStatus.status }),
-      });
-      if (!response.ok) {
-        throw new Error("Невозможно добавить задачу");
-      }
-      const data = await response.json();
-      console.log("data :>> ", data);
-      dispatch(toggleTask(id));
-    } catch (error) {}
-  }
-);
-
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({ id, body }, { rejectWithValue, dispatch, getState }) => {
-    console.log("id :>> ", id);
-    console.log("body :>> ", body);
-
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-        body: JSON.stringify({
-          title: body.title,
-          description: body.description,
-        }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) {
         throw new Error("Невозможно обновить задачу");
@@ -182,7 +151,6 @@ const taskSlice = createSlice({
     builder.addCase(fetchTask.rejected, setError);
     builder.addCase(removeTask.rejected, setError);
     builder.addCase(addNewTask.rejected, setError);
-    builder.addCase(selectTask.rejected, setError);
     builder.addCase(updateTask.rejected, setError);
   },
 });

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchTasks,
-  selectTask,
+  updateTask,
   removeTask,
   fetchTask,
 } from "../../services/store/taskSlice";
@@ -18,17 +18,21 @@ import { Button } from "@mui/material";
 
 const CheckboxList = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
   const { status, error, tasks } = useSelector((state) => state.tasks);
+
   const onChangeCheckbox = (taskId) => {
-    dispatch(selectTask(taskId));
+    const taskStatus = tasks.find((task) => task._id === taskId);
+    dispatch(updateTask({ id: taskId, body: { status: !taskStatus.status } }));
   };
 
   const deleteTask = (taskId) => {
     dispatch(removeTask(taskId));
   };
+
   const editTask = (taskId) => {
     dispatch(setPopupStatus(true));
     dispatch(fetchTask(taskId));

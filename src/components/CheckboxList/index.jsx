@@ -2,14 +2,17 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchTasks,
-  toggleTask,
+  selectTask,
   removeTask,
+  fetchTask,
 } from "../../services/store/taskSlice";
+import { setPopupStatus } from "../../services/store/appSlice";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import EditIcon from "@mui/icons-material/Edit";
 import "./checkboxList.css";
 import { Button } from "@mui/material";
 
@@ -20,11 +23,15 @@ const CheckboxList = () => {
   }, [dispatch]);
   const { status, error, tasks } = useSelector((state) => state.tasks);
   const onChangeCheckbox = (taskId) => {
-    dispatch(toggleTask({ taskId }));
+    dispatch(selectTask(taskId));
   };
 
-  const deteleItem = (taskId) => {
+  const deleteTask = (taskId) => {
     dispatch(removeTask(taskId));
+  };
+  const editTask = (taskId) => {
+    dispatch(setPopupStatus(true));
+    dispatch(fetchTask(taskId));
   };
 
   return (
@@ -50,9 +57,14 @@ const CheckboxList = () => {
                 }
                 label={task.title}
               />
-              <Button onClick={() => deteleItem(task._id)}>
-                <HighlightOffIcon />
-              </Button>
+              <div>
+                <Button onClick={() => editTask(task._id)}>
+                  <EditIcon />
+                </Button>
+                <Button onClick={() => deleteTask(task._id)}>
+                  <HighlightOffIcon />
+                </Button>
+              </div>
             </div>
             {index !== tasks.length - 1 && <Divider />}
           </div>

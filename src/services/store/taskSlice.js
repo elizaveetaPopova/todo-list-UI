@@ -18,6 +18,22 @@ export const fetchTasks = createAsyncThunk(
   }
 );
 
+export const fetchTask = createAsyncThunk(
+  "tasks/fetchTask",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/tasks/${id}`);
+      if (!response.ok) {
+        throw new Error("Ошибка запроса");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const removeTask = createAsyncThunk(
   "tasks/removeTask",
   async (id, { rejectWithValue, dispatch }) => {
@@ -57,6 +73,58 @@ export const addNewTask = createAsyncThunk(
   }
 );
 
+export const selectTask = createAsyncThunk(
+  "tasks/toggleTask",
+  async (id, { rejectWithValue, dispatch, getState }) => {
+    const state = getState();
+    const { tasks } = state.tasks;
+    const taskStatus = tasks.find((task) => task._id === id);
+    console.log("taskStatus.status :>> ", taskStatus.status);
+    try {
+      const response = await fetch(`${API_URL}/tasks/toggle/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify({ status: !taskStatus.status }),
+      });
+      if (!response.ok) {
+        throw new Error("Невозможно добавить задачу");
+      }
+      const data = await response.json();
+      console.log("data :>> ", data);
+      dispatch(toggleTask(id));
+    } catch (error) {}
+  }
+);
+
+export const updateTask = createAsyncThunk(
+  "tasks/updateTask",
+  async ({ id, body }, { rejectWithValue, dispatch, getState }) => {
+    console.log("id :>> ", id);
+    console.log("body :>> ", body);
+
+    try {
+      const response = await fetch(`${API_URL}/tasks/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify({
+          title: body.title,
+          description: body.description,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Невозможно обновить задачу");
+      }
+      dispatch(fetchTasks());
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const setError = (state, action) => {
   state.status = "rejected";
   state.error = action.payload;
@@ -66,11 +134,17 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState: {
     tasks: [],
+    task: null,
     status: null,
     error: null,
   },
   reducers: {
-    getOneTask(state, action) {},
+    getOneTask(state, action) {
+      state.task = state.tasks.find((task) => task._id === action.payload);
+    },
+    resetTask(state) {
+      state.task = null;
+    },
 
     addTask(state, action) {
       state.tasks.push(action.payload);
@@ -80,7 +154,6 @@ const taskSlice = createSlice({
         (task) => task._id !== action.payload.id
       );
     },
-    updateTask(state, action) {},
     toggleTask(state, action) {
       const toggledTask = state.tasks.find(
         (task) => task._id === action.payload.taskId
@@ -97,9 +170,20 @@ const taskSlice = createSlice({
       state.status = "resolved";
       state.tasks = action.payload;
     });
+    builder.addCase(fetchTask.pending, (state, action) => {
+      state.status = "loading";
+      state.task = action.payload;
+    });
+    builder.addCase(fetchTask.fulfilled, (state, action) => {
+      state.status = "resolved";
+      state.task = action.payload;
+    });
     builder.addCase(fetchTasks.rejected, setError);
+    builder.addCase(fetchTask.rejected, setError);
     builder.addCase(removeTask.rejected, setError);
     builder.addCase(addNewTask.rejected, setError);
+    builder.addCase(selectTask.rejected, setError);
+    builder.addCase(updateTask.rejected, setError);
   },
 });
 
@@ -108,8 +192,8 @@ export const {
   getTasks,
   getOneTask,
   deleteTask,
-  updateTask,
   toggleTask,
+  resetTask,
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

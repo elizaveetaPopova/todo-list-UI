@@ -51,6 +51,27 @@ export const removeTask = createAsyncThunk(
   }
 );
 
+export const removeTasks = createAsyncThunk(
+  "tasks/removeTasks",
+  async (tasksIds, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await fetch(`${API_URL}/tasks`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(tasksIds),
+      });
+      if (!response.ok) {
+        throw new Error("Ошибка запроса");
+      }
+      dispatch(deleteTasks());
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const addNewTask = createAsyncThunk(
   "tasks/addTask",
   async (task, { rejectWithValue, dispatch }) => {
@@ -118,11 +139,16 @@ const taskSlice = createSlice({
     addTask(state, action) {
       state.tasks.push(action.payload);
     },
+
     deleteTask(state, action) {
       state.tasks = state.tasks.filter(
         (task) => task._id !== action.payload.id
       );
     },
+    deleteTasks(state, action) {
+      state.tasks = state.tasks.filter((task) => !task.status);
+    },
+
     toggleTask(state, action) {
       const toggledTask = state.tasks.find(
         (task) => task._id === action.payload.taskId
@@ -150,6 +176,7 @@ const taskSlice = createSlice({
     builder.addCase(fetchTasks.rejected, setError);
     builder.addCase(fetchTask.rejected, setError);
     builder.addCase(removeTask.rejected, setError);
+    builder.addCase(removeTasks.rejected, setError);
     builder.addCase(addNewTask.rejected, setError);
     builder.addCase(updateTask.rejected, setError);
   },
@@ -162,6 +189,7 @@ export const {
   deleteTask,
   toggleTask,
   resetTask,
+  deleteTasks,
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

@@ -9,11 +9,16 @@ import Popup from "./components/Popup";
 import CheckboxList from "./components/CheckboxList";
 
 import "./styles/app.css";
-import { addNewTask, resetTask, updateTask } from "./services/store/taskSlice";
+import {
+  addNewTask,
+  removeTasks,
+  resetTask,
+  updateTask,
+} from "./services/store/taskSlice";
 
 const App = () => {
-  const task = useSelector((state) => state.tasks.task);
-
+  const { task, tasks } = useSelector((state) => state.tasks);
+  const isPopupOpen = useSelector((state) => state.app.isPopupOpen);
   const [title, setTitle] = useState(!task ? "" : task.title);
   const [description, setDescription] = useState(!task ? "" : task.title);
 
@@ -23,7 +28,6 @@ const App = () => {
   }, [task]);
 
   const dispatch = useDispatch();
-  const isPopupOpen = useSelector((state) => state.app.isPopupOpen);
   const handleOpen = () => {
     dispatch(setPopupStatus(true));
   };
@@ -40,7 +44,10 @@ const App = () => {
   };
 
   const deleteTasks = () => {
-    console.log("tasks deleted :>> ");
+    const removalTasks = tasks
+      .filter((task) => task.status === true)
+      .map((task) => task._id);
+    dispatch(removeTasks(removalTasks));
   };
 
   const handleSubmit = (e) => {

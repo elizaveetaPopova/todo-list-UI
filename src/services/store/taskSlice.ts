@@ -1,6 +1,30 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 const API_URL = "http://localhost:3002";
+
+const setError = (state: TasksState, action: PayloadAction<any>) => {
+  state.status = "rejected";
+  state.error = action.payload;
+};
+
+interface TaskState {
+  _id: string,
+  title: string,
+  description: string,
+  status: boolean,
+}
+
+interface TasksState {
+  tasks: Array<TaskState>,
+  task: TaskState | null,
+  status: null | "loading" | "resolved" |  "rejected",
+  error: null ,
+}
+
+interface NewTaskBody {
+  title: string,
+  description: string,
+}
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
@@ -13,7 +37,7 @@ export const fetchTasks = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
@@ -29,14 +53,14 @@ export const fetchTask = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
 export const removeTask = createAsyncThunk(
   "tasks/removeTask",
-  async (id, { rejectWithValue, dispatch }) => {
+  async (id: string, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
         method: "DELETE",
@@ -44,16 +68,16 @@ export const removeTask = createAsyncThunk(
       if (!response.ok) {
         throw new Error("Ошибка запроса");
       }
-      dispatch(deleteTask({ id }));
+      dispatch(deleteTask(id));
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
 export const removeTasks = createAsyncThunk(
   "tasks/removeTasks",
-  async (tasksIds, { rejectWithValue, dispatch }) => {
+  async (tasksIds: Array<string>, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/tasks`, {
         method: "DELETE",
@@ -67,14 +91,14 @@ export const removeTasks = createAsyncThunk(
       }
       dispatch(deleteTasks());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
 export const addNewTask = createAsyncThunk(
   "tasks/addTask",
-  async (task, { rejectWithValue, dispatch }) => {
+  async (task: NewTaskBody, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/tasks`, {
         method: "POST",
@@ -89,14 +113,14 @@ export const addNewTask = createAsyncThunk(
       const data = await response.json();
       dispatch(addTask(data));
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
-  async ({ id, body }, { rejectWithValue, dispatch, getState }) => {
+  async ({ id, body }: {id: string, body: object}, { rejectWithValue, dispatch, getState }) => {
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
         method: "PATCH",
@@ -110,15 +134,12 @@ export const updateTask = createAsyncThunk(
       }
       dispatch(fetchTasks());
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
-const setError = (state, action) => {
-  state.status = "rejected";
-  state.error = action.payload;
-};
+
 
 const taskSlice = createSlice({
   name: "tasks",
@@ -127,37 +148,42 @@ const taskSlice = createSlice({
     task: null,
     status: null,
     error: null,
-  },
+  } as TasksState,
+
   reducers: {
-    getOneTask(state, action) {
-      state.task = state.tasks.find((task) => task._id === action.payload);
+    getOneTask(state, action: PayloadAction<string>) {
+      const task = state.tasks.find((task) => task._id === action.payload);
+      if (task) {
+        state.task = task
+      }
     },
+    
     resetTask(state) {
       state.task = null;
     },
 
-    addTask(state, action) {
+    addTask(state, action: PayloadAction<TaskState>) {
       state.tasks.push(action.payload);
     },
 
-    deleteTask(state, action) {
+    deleteTask(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter(
-        (task) => task._id !== action.payload.id
+        (task) => task._id !== action.payload
       );
     },
-    deleteTasks(state, action) {
+    deleteTasks(state) {
       state.tasks = state.tasks.filter((task) => !task.status);
     },
 
-    toggleTask(state, action) {
-      const toggledTask = state.tasks.find(
-        (task) => task._id === action.payload.taskId
-      );
-      toggledTask.status = !toggledTask.status;
-    },
+    // toggleTask(state, action) {
+    //   const toggledTask = state.tasks.find(
+    //     (task) => task._id === action.payload.taskId
+    //   );
+    //   toggledTask.status = !toggledTask.status;
+    // },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTasks.pending, (state, action) => {
+    builder.addCase(fetchTasks.pending, (state, action: PayloadAction<any>) => {
       state.status = "loading";
       state.tasks = action.payload;
     });
@@ -165,7 +191,7 @@ const taskSlice = createSlice({
       state.status = "resolved";
       state.tasks = action.payload;
     });
-    builder.addCase(fetchTask.pending, (state, action) => {
+    builder.addCase(fetchTask.pending, (state, action: PayloadAction<any>) => {
       state.status = "loading";
       state.task = action.payload;
     });
@@ -184,10 +210,9 @@ const taskSlice = createSlice({
 
 export const {
   addTask,
-  getTasks,
   getOneTask,
   deleteTask,
-  toggleTask,
+  // toggleTask,
   resetTask,
   deleteTasks,
 } = taskSlice.actions;

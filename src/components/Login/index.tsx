@@ -1,5 +1,5 @@
+import React, {useState} from 'react'
 import { Box, Button, TextField } from "@mui/material";
-import { useState } from "react";
 
 import "./login.css";
 
@@ -7,16 +7,16 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
     console.log("handleSubmit");
   };
 
-  const onChangeEmail = (e) => {
+  const onChangeEmail = (e:any) => {
     setEmail(e.target.value);
   };
 
-  const onChangePassword = (e) => {
+  const onChangePassword = (e:any) => {
     setPassword(e.target.value);
   };
 

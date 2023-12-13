@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React,{ useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -15,19 +15,22 @@ import {
   updateTask,
 } from "../../services/store/taskSlice";
 import "./todo.css";
+import { RootState } from "../../services/store";
+import { useAppDispatch } from "../../services/hooks";
 
 const ToDo = () => {
-  const { task, tasks } = useSelector((state) => state.tasks);
-  const isPopupOpen = useSelector((state) => state.app.isPopupOpen);
-  const [title, setTitle] = useState(!task ? "" : task.title);
-  const [description, setDescription] = useState(!task ? "" : task.title);
+  const { task, tasks } = useSelector((state: RootState) => state.tasks);
+  const isPopupOpen = useSelector((state: RootState) => state.app.isPopupOpen);
+  const [title, setTitle] = useState<string>(!task ? "" : task.title);
+  const [description, setDescription] = useState<string>(!task ? "" : task.title);
 
   useEffect(() => {
     setTitle(!task ? "" : task.title);
     setDescription(!task ? "" : task.description);
   }, [task]);
+  
+  const dispatch = useAppDispatch();
 
-  const dispatch = useDispatch();
   const handleOpen = () => {
     dispatch(setPopupStatus(true));
   };
@@ -37,7 +40,7 @@ const ToDo = () => {
     setDescription("");
   };
 
-  const handleClose = () => {
+  const handleClose: React.ReactEventHandler = () => {
     dispatch(setPopupStatus(false));
     dispatch(resetTask());
     resetForm();
@@ -50,17 +53,15 @@ const ToDo = () => {
     dispatch(removeTasks(removalTasks));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     if (!!title && !!description) {
       const taskBody = {
         title,
         description,
       };
-      dispatch(
-        !task
-          ? addNewTask(taskBody)
-          : updateTask({ id: task._id, body: taskBody })
-      );
+      if (!task) {dispatch(addNewTask(taskBody))} else {
+        updateTask({ id: task._id, body: taskBody })
+      }
     }
   };
   return (

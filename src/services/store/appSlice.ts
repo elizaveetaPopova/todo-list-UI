@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
   isPopupOpen: boolean
@@ -6,11 +6,11 @@ interface AppState {
 
 const initialState: AppState = {
   isPopupOpen: false,
-}
+};
 
 
 const appSlice = createSlice({
-  name: "app",
+  name: 'app',
   initialState,
   reducers: {
     setPopupStatus(state, action: PayloadAction<boolean>) {

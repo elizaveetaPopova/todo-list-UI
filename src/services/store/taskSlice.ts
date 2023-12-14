@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-const API_URL = "http://localhost:3002";
+const API_URL = 'http://localhost:3002';
 
 const setError = (state: TasksState, action: PayloadAction<any>) => {
-  state.status = "rejected";
+  state.status = 'rejected';
   state.error = action.payload;
 };
 
@@ -17,7 +17,7 @@ interface TaskState {
 interface TasksState {
   tasks: Array<TaskState>,
   task: TaskState | null,
-  status: null | "loading" | "resolved" |  "rejected",
+  status: null | 'loading' | 'resolved' |  'rejected',
   error: null ,
 }
 
@@ -27,122 +27,122 @@ interface NewTaskBody {
 }
 
 export const fetchTasks = createAsyncThunk(
-  "tasks/fetchTasks",
+  'tasks/fetchTasks',
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_URL}/tasks`);
       if (!response.ok) {
-        throw new Error("Ошибка запроса");
+        throw new Error('Ошибка запроса');
       }
       const data = await response.json();
       return data;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
-  }
+  },
 );
 
 export const fetchTask = createAsyncThunk(
-  "tasks/fetchTask",
+  'tasks/fetchTask',
   async (id, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`);
       if (!response.ok) {
-        throw new Error("Ошибка запроса");
+        throw new Error('Ошибка запроса');
       }
       const data = await response.json();
       return data;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
-  }
+  },
 );
 
 export const removeTask = createAsyncThunk(
-  "tasks/removeTask",
+  'tasks/removeTask',
   async (id: string, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
       if (!response.ok) {
-        throw new Error("Ошибка запроса");
+        throw new Error('Ошибка запроса');
       }
       dispatch(deleteTask(id));
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
-  }
+  },
 );
 
 export const removeTasks = createAsyncThunk(
-  "tasks/removeTasks",
+  'tasks/removeTasks',
   async (tasksIds: Array<string>, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/tasks`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json;charset=utf-8",
+          'Content-Type': 'application/json;charset=utf-8',
         },
         body: JSON.stringify(tasksIds),
       });
       if (!response.ok) {
-        throw new Error("Ошибка запроса");
+        throw new Error('Ошибка запроса');
       }
       dispatch(deleteTasks());
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
-  }
+  },
 );
 
 export const addNewTask = createAsyncThunk(
-  "tasks/addTask",
+  'tasks/addTask',
   async (task: NewTaskBody, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`${API_URL}/tasks`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json;charset=utf-8",
+          'Content-Type': 'application/json;charset=utf-8',
         },
         body: JSON.stringify(task),
       });
       if (!response.ok) {
-        throw new Error("Невозможно добавить задачу");
+        throw new Error('Невозможно добавить задачу');
       }
       const data = await response.json();
       dispatch(addTask(data));
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
-  }
+  },
 );
 
 export const updateTask = createAsyncThunk(
-  "tasks/updateTask",
+  'tasks/updateTask',
   async ({ id, body }: {id: string, body: object}, { rejectWithValue, dispatch, getState }) => {
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json;charset=utf-8",
+          'Content-Type': 'application/json;charset=utf-8',
         },
         body: JSON.stringify(body),
       });
       if (!response.ok) {
-        throw new Error("Невозможно обновить задачу");
+        throw new Error('Невозможно обновить задачу');
       }
       dispatch(fetchTasks());
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
-  }
+  },
 );
 
 
 
 const taskSlice = createSlice({
-  name: "tasks",
+  name: 'tasks',
   initialState: {
     tasks: [],
     task: null,
@@ -154,7 +154,7 @@ const taskSlice = createSlice({
     getOneTask(state, action: PayloadAction<string>) {
       const task = state.tasks.find((task) => task._id === action.payload);
       if (task) {
-        state.task = task
+        state.task = task;
       }
     },
     
@@ -168,7 +168,7 @@ const taskSlice = createSlice({
 
     deleteTask(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter(
-        (task) => task._id !== action.payload
+        (task) => task._id !== action.payload,
       );
     },
     deleteTasks(state) {
@@ -184,19 +184,19 @@ const taskSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTasks.pending, (state, action: PayloadAction<any>) => {
-      state.status = "loading";
+      state.status = 'loading';
       state.tasks = action.payload;
     });
     builder.addCase(fetchTasks.fulfilled, (state, action) => {
-      state.status = "resolved";
+      state.status = 'resolved';
       state.tasks = action.payload;
     });
     builder.addCase(fetchTask.pending, (state, action: PayloadAction<any>) => {
-      state.status = "loading";
+      state.status = 'loading';
       state.task = action.payload;
     });
     builder.addCase(fetchTask.fulfilled, (state, action) => {
-      state.status = "resolved";
+      state.status = 'resolved';
       state.task = action.payload;
     });
     builder.addCase(fetchTasks.rejected, setError);

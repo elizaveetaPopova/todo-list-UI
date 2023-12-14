@@ -1,20 +1,21 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import EditIcon from '@mui/icons-material/Edit';
+import './checkboxList.css';
+import { Button } from '@mui/material';
+
+import { setPopupStatus } from '../../services/store/appSlice';
 import {
   fetchTasks,
   updateTask,
   removeTask,
   fetchTask,
-} from "../../services/store/taskSlice";
-import { setPopupStatus } from "../../services/store/appSlice";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Divider from "@mui/material/Divider";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import EditIcon from "@mui/icons-material/Edit";
-import "./checkboxList.css";
-import { Button } from "@mui/material";
+} from '../../services/store/taskSlice';
 
 const CheckboxList = () => {
   const dispatch = useDispatch();
@@ -40,9 +41,9 @@ const CheckboxList = () => {
 
   return (
     <FormGroup
-      sx={{ overflowY: "scroll", flexWrap: "nowrap", marginTop: "20px" }}
+      sx={{ overflowY: 'scroll', flexWrap: 'nowrap', marginTop: '20px' }}
     >
-      {status === "loading" && (
+      {status === 'loading' && (
         <div className="loaderContainer">
           <p>loading...</p>
         </div>

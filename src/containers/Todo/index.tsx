@@ -19,12 +19,12 @@ import { useAppDispatch } from '../../services/hooks';
 
 const ToDo = () => {
   const { task, tasks } = useSelector((state: RootState) => state.tasks);
-  const isPopupOpen = useSelector((state: RootState) => state.app.isPopupOpen);
+  const isPopupOpen =    useSelector((state: RootState) => state.app.isPopupOpen);
   const [title, setTitle] = useState<string>(!task ? '' : task.title);
   const [description, setDescription] = useState<string>(!task ? '' : task.title);
 
   useEffect(() => {
-    setTitle(!task ? '' : task.title);
+    setTitle(!task ? '' : task.title) ;
     setDescription(!task ? '' : task.description);
   }, [task]);
   

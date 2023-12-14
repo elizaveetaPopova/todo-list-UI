@@ -44,7 +44,7 @@ export const fetchTasks = createAsyncThunk(
 
 export const fetchTask = createAsyncThunk(
   'tasks/fetchTask',
-  async (id, { rejectWithValue }) => {
+  async (id:string, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`);
       if (!response.ok) {

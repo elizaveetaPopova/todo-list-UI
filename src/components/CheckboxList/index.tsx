@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -16,25 +16,27 @@ import {
   removeTask,
   fetchTask,
 } from '../../services/store/taskSlice';
+import { RootState } from '../../services/store';
+import { useAppDispatch } from '../../services/hooks';
 
 const CheckboxList = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
-  const { status, error, tasks } = useSelector((state) => state.tasks);
+  const { status, error, tasks } = useSelector((state:RootState) => state.tasks);
 
-  const onChangeCheckbox = (taskId) => {
-    const taskStatus = tasks.find((task) => task._id === taskId);
-    dispatch(updateTask({ id: taskId, body: { status: !taskStatus.status } }));
+  const onChangeCheckbox = (taskId: string) => {
+    const task = tasks.find((task) => task._id === taskId);
+    dispatch(updateTask({ id: taskId, body: { status: !task?.status } }));
   };
 
-  const deleteTask = (taskId) => {
+  const deleteTask = (taskId:string) => {
     dispatch(removeTask(taskId));
   };
 
-  const editTask = (taskId) => {
+  const editTask = (taskId:string) => {
     dispatch(setPopupStatus(true));
     dispatch(fetchTask(taskId));
   };

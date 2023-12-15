@@ -1,43 +1,45 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPopupStatus } from "./services/store/appSlice";
-import Card from "@mui/material/Card";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import Popup from "./components/Popup";
+import React,{ useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Card from '@mui/material/Card';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 
-import CheckboxList from "./components/CheckboxList";
-
-import "./styles/app.css";
+import Popup from '../../components/Popup';
+import CheckboxList from '../../components/CheckboxList';
+import { setPopupStatus } from '../../services/store/appSlice';
 import {
   addNewTask,
   removeTasks,
   resetTask,
   updateTask,
-} from "./services/store/taskSlice";
+} from '../../services/store/taskSlice';
+import './todo.css';
+import { RootState } from '../../services/store';
+import { useAppDispatch } from '../../services/hooks';
 
-const App = () => {
-  const { task, tasks } = useSelector((state) => state.tasks);
-  const isPopupOpen = useSelector((state) => state.app.isPopupOpen);
-  const [title, setTitle] = useState(!task ? "" : task.title);
-  const [description, setDescription] = useState(!task ? "" : task.title);
+const ToDo = () => {
+  const { task, tasks } = useSelector((state: RootState) => state.tasks);
+  const isPopupOpen =    useSelector((state: RootState) => state.app.isPopupOpen);
+  const [title, setTitle] = useState<string>(!task ? '' : task.title);
+  const [description, setDescription] = useState<string>(!task ? '' : task.title);
 
   useEffect(() => {
-    setTitle(!task ? "" : task.title);
-    setDescription(!task ? "" : task.description);
+    setTitle(!task ? '' : task.title) ;
+    setDescription(!task ? '' : task.description);
   }, [task]);
+  
+  const dispatch = useAppDispatch();
 
-  const dispatch = useDispatch();
   const handleOpen = () => {
     dispatch(setPopupStatus(true));
   };
 
   const resetForm = () => {
-    setTitle("");
-    setDescription("");
+    setTitle('');
+    setDescription('');
   };
 
-  const handleClose = () => {
+  const handleClose: React.ReactEventHandler = () => {
     dispatch(setPopupStatus(false));
     dispatch(resetTask());
     resetForm();
@@ -50,17 +52,15 @@ const App = () => {
     dispatch(removeTasks(removalTasks));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     if (!!title && !!description) {
       const taskBody = {
         title,
         description,
       };
-      dispatch(
-        !task
-          ? addNewTask(taskBody)
-          : updateTask({ id: task._id, body: taskBody })
-      );
+      if (!task) {dispatch(addNewTask(taskBody));} else {
+        updateTask({ id: task._id, body: taskBody });
+      }
     }
   };
   return (
@@ -93,4 +93,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default ToDo;

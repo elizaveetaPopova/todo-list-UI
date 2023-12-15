@@ -1,0 +1,18 @@
+.loginForm {
+  display: flex;
+  justify-content: center;
+}
+
+.loginFormBox {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.textInput {
+  margin-top: 20px;
+}
+
+.formButton {
+  margin-top: 20px;
+}

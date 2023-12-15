@@ -1,11 +1,30 @@
 
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import "./popup.css";
+import React from 'react';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import './popup.css';
 
-const Popup = ({
+interface TaskState {
+  _id: string,
+  title: string,
+  description: string,
+  status: boolean,
+}
+
+interface PopupProps {
+  isPopupOpen: boolean,
+  onClose: React.ReactEventHandler,
+  title: string,
+  description: string,
+  setTitle: React.Dispatch<React.SetStateAction<string>>,
+  setDescription: React.Dispatch<React.SetStateAction<string>>,
+  handleSubmit: React.FormEventHandler<HTMLFormElement>,
+  task: null | TaskState
+}
+
+const Popup: React.FC<PopupProps> = ({
   isPopupOpen,
   onClose,
   title,
@@ -13,7 +32,7 @@ const Popup = ({
   setTitle,
   setDescription,
   handleSubmit,
-  task
+  task,
 }) => {
   return (
     <Modal className="modal" open={isPopupOpen}>
@@ -28,7 +47,7 @@ const Popup = ({
             onChange={(event) => setTitle(event.target.value)}
           />
           <TextField
-            sx={{ marginTop: "20px" }}
+            sx={{ marginTop: '20px' }}
             fullWidth
             required
             multiline
@@ -44,7 +63,7 @@ const Popup = ({
 
         <div className="buttonGroup">
           <Button variant="contained" color="success" type="submit">
-            {!task ? "Добавить задачу" : "Обновить задачу"}
+            {!task ? 'Добавить задачу' : 'Обновить задачу'}
           </Button>
           <Button
             sx={{ marginLeft: 2 }}

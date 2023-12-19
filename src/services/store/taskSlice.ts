@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-const API_URL = 'http://localhost:3002';
-
 const setError = (state: TasksState, action: PayloadAction<any>) => {
   state.status = 'rejected';
   state.error = action.payload;
@@ -30,7 +28,7 @@ export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/tasks`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks`);
       if (!response.ok) {
         throw new Error('Ошибка запроса');
       }
@@ -46,7 +44,7 @@ export const fetchTask = createAsyncThunk(
   'tasks/fetchTask',
   async (id:string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/tasks/${id}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/${id}`);
       if (!response.ok) {
         throw new Error('Ошибка запроса');
       }
@@ -62,7 +60,7 @@ export const removeTask = createAsyncThunk(
   'tasks/removeTask',
   async (id: string, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`${API_URL}/tasks/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -79,7 +77,7 @@ export const removeTasks = createAsyncThunk(
   'tasks/removeTasks',
   async (tasksIds: Array<string>, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`${API_URL}/tasks`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
@@ -100,7 +98,7 @@ export const addNewTask = createAsyncThunk(
   'tasks/addTask',
   async (task: NewTaskBody, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`${API_URL}/tasks`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
@@ -122,7 +120,7 @@ export const updateTask = createAsyncThunk(
   'tasks/updateTask',
   async ({ id, body }: {id: string, body: object}, { rejectWithValue, dispatch, getState }) => {
     try {
-      const response = await fetch(`${API_URL}/tasks/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/tasks/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
